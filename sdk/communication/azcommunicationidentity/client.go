@@ -20,11 +20,14 @@ package azcommunicationidentity
 import (
 	"context"
 	"errors"
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
-	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/runtime"
+	
 )
 
 type Client struct {
@@ -32,15 +35,31 @@ type Client struct {
 	pl runtime.Pipeline
 }
 
-// NewClient creates a new instance of Client with the specified values.
+// ClientOptions contains the optional parameters when creating a Client.
+type ClientOptions struct {
+	azcore.ClientOptions
+}
+
+// NewClient creates a new instance of Azure Communication Identity Client with the specified values.
 //   - endpoint - The communication resource, for example https://my-resource.communication.azure.com
-//   - pl - the pipeline used for sending requests and handling responses.
-func NewClient(endpoint string, pl runtime.Pipeline) *Client {
-	client := &Client{
+//   - cred - an Azure AD credential, typically obtained via the azidentity module
+//   - options - client options; pass nil to accept the default values
+func NewClient(endpoint string, credential azcore.TokenCredential, options *ClientOptions) *Client {
+	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{"https://communication.azure.com//.default"}, nil)
+	var conOptions = getClientOptions(options)
+	conOptions.PerRetryPolicies = append(conOptions.PerRetryPolicies, authPolicy)
+	pl := runtime.NewPipeline("azcommunicationidentity", "v1.0.0", runtime.PipelineOptions{}, &conOptions.ClientOptions)
+	return &Client{
 		endpoint: endpoint,
 		pl: pl,
 	}
-	return client
+}
+
+func getClientOptions[T any](o *T) *T {
+	if o == nil {
+		return new(T)
+	}
+	return o
 }
 
 // Create - Create a new identity, and optionally, an access token.
