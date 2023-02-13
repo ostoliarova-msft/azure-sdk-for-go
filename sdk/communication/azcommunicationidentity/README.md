@@ -1,0 +1,3 @@
+Use this command to generate Identity SDK code
+
+autorest --input-file=https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/communication/data-plane/Identity/stable/2022-10-01/CommunicationIdentity.json --go --license-header=MICROSOFT_APACHE_NO_VERSION --namespace=azcommunicationidentity --output-folder=./azcommunicationidentity --package-version=v1.0.0-beta --clear-output-folder --can-clear-output-folder
