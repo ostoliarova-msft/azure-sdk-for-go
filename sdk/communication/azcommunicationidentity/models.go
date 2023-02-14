@@ -25,7 +25,7 @@ type AccessTokenRequest struct {
 	Scopes []*CommunicationIdentityTokenScope `json:"scopes,omitempty"`
 
 	// Optional custom validity period of the token within [60,1440] minutes range. If not provided, the default value of 1440
-// minutes (24 hours) will be used.
+	// minutes (24 hours) will be used.
 	ExpiresInMinutes *int32 `json:"expiresInMinutes,omitempty"`
 }
 
@@ -41,7 +41,7 @@ type AccessTokenResult struct {
 // ClientCreateOptions contains the optional parameters for the Client.Create method.
 type ClientCreateOptions struct {
 	// If specified, creates also a Communication Identity access token associated with the identity and containing the requested
-// scopes.
+	// scopes.
 	Body *CreateRequest
 }
 
@@ -101,7 +101,7 @@ type CreateRequest struct {
 	CreateTokenWithScopes []*CommunicationIdentityTokenScope `json:"createTokenWithScopes,omitempty"`
 
 	// Optional custom validity period of the token within [60,1440] minutes range. If not provided, the default value of 1440
-// minutes (24 hours) will be used.
+	// minutes (24 hours) will be used.
 	ExpiresInMinutes *int32 `json:"expiresInMinutes,omitempty"`
 }
 
@@ -115,4 +115,3 @@ type TeamsUserExchangeTokenRequest struct {
 	// REQUIRED; Object ID of an Azure AD user (Teams User) to be verified against the oid claim in the Azure AD access token.
 	UserID *string `json:"userId,omitempty"`
 }
-

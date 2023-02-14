@@ -33,4 +33,3 @@ type ClientIssueAccessTokenResponse struct {
 type ClientRevokeAccessTokensResponse struct {
 	// placeholder for future response values
 }
-

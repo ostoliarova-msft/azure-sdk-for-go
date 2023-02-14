@@ -23,9 +23,8 @@ import (
 // Don't use this type directly, use NewClient() instead.
 type Client struct {
 	endpoint string
-	pl runtime.Pipeline
+	pl       runtime.Pipeline
 }
-
 
 // Create - Create a new identity, and optionally, an access token.
 // If the operation fails it returns an *azcore.ResponseError type.
@@ -240,4 +239,3 @@ func (client *Client) revokeAccessTokensCreateRequest(ctx context.Context, id st
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
-
