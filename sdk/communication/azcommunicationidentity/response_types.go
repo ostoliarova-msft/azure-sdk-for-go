@@ -9,27 +9,28 @@
 
 package azcommunicationidentity
 
-// ClientCreateResponse contains the response from method Client.Create.
-type ClientCreateResponse struct {
+// ClientCreateUserResponse contains the response from method Client.CreateUser.
+type ClientCreateUserResponse struct {
 	AccessTokenResult
 }
 
-// ClientDeleteResponse contains the response from method Client.Delete.
-type ClientDeleteResponse struct {
+// ClientDeleteUserResponse contains the response from method Client.DeleteUser.
+type ClientDeleteUserResponse struct {
 	// placeholder for future response values
 }
 
-// ClientExchangeTeamsUserAccessTokenResponse contains the response from method Client.ExchangeTeamsUserAccessToken.
-type ClientExchangeTeamsUserAccessTokenResponse struct {
+// ClientGetTokenForTeamsUserResponse contains the response from method Client.GetTokenForTeamsUser.
+type ClientGetTokenForTeamsUserResponse struct {
 	AccessToken
 }
 
-// ClientIssueAccessTokenResponse contains the response from method Client.IssueAccessToken.
-type ClientIssueAccessTokenResponse struct {
+// ClientGetTokenResponse contains the response from method Client.GetToken.
+type ClientGetTokenResponse struct {
 	AccessToken
 }
 
-// ClientRevokeAccessTokensResponse contains the response from method Client.RevokeAccessTokens.
-type ClientRevokeAccessTokensResponse struct {
+// ClientRevokeTokensResponse contains the response from method Client.RevokeTokens.
+type ClientRevokeTokensResponse struct {
 	// placeholder for future response values
 }
+

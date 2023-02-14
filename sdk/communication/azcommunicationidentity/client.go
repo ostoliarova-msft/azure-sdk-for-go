@@ -23,30 +23,31 @@ import (
 // Don't use this type directly, use NewClient() instead.
 type Client struct {
 	endpoint string
-	pl       runtime.Pipeline
+	pl runtime.Pipeline
 }
 
-// Create - Create a new identity, and optionally, an access token.
+
+// CreateUser - Create a new identity, and optionally, an access token.
 // If the operation fails it returns an *azcore.ResponseError type.
 // Generated from API version 2022-10-01
-// options - ClientCreateOptions contains the optional parameters for the Client.Create method.
-func (client *Client) Create(ctx context.Context, options *ClientCreateOptions) (ClientCreateResponse, error) {
-	req, err := client.createCreateRequest(ctx, options)
+// options - ClientCreateUserOptions contains the optional parameters for the Client.CreateUser method.
+func (client *Client) CreateUser(ctx context.Context, options *ClientCreateUserOptions) (ClientCreateUserResponse, error) {
+	req, err := client.createUserCreateRequest(ctx, options)
 	if err != nil {
-		return ClientCreateResponse{}, err
+		return ClientCreateUserResponse{}, err
 	}
 	resp, err := client.pl.Do(req)
 	if err != nil {
-		return ClientCreateResponse{}, err
+		return ClientCreateUserResponse{}, err
 	}
 	if !runtime.HasStatusCode(resp, http.StatusCreated) {
-		return ClientCreateResponse{}, runtime.NewResponseError(resp)
+		return ClientCreateUserResponse{}, runtime.NewResponseError(resp)
 	}
-	return client.createHandleResponse(resp)
+	return client.createUserHandleResponse(resp)
 }
 
-// createCreateRequest creates the Create request.
-func (client *Client) createCreateRequest(ctx context.Context, options *ClientCreateOptions) (*policy.Request, error) {
+// createUserCreateRequest creates the CreateUser request.
+func (client *Client) createUserCreateRequest(ctx context.Context, options *ClientCreateUserOptions) (*policy.Request, error) {
 	urlPath := "/identities"
 	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
 	if err != nil {
@@ -62,37 +63,37 @@ func (client *Client) createCreateRequest(ctx context.Context, options *ClientCr
 	return req, nil
 }
 
-// createHandleResponse handles the Create response.
-func (client *Client) createHandleResponse(resp *http.Response) (ClientCreateResponse, error) {
-	result := ClientCreateResponse{}
+// createUserHandleResponse handles the CreateUser response.
+func (client *Client) createUserHandleResponse(resp *http.Response) (ClientCreateUserResponse, error) {
+	result := ClientCreateUserResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.AccessTokenResult); err != nil {
-		return ClientCreateResponse{}, err
+		return ClientCreateUserResponse{}, err
 	}
 	return result, nil
 }
 
-// Delete - Delete the identity, revoke all tokens for the identity and delete all associated data.
+// DeleteUser - Delete the identity, revoke all tokens for the identity and delete all associated data.
 // If the operation fails it returns an *azcore.ResponseError type.
 // Generated from API version 2022-10-01
 // id - Identifier of the identity to be deleted.
-// options - ClientDeleteOptions contains the optional parameters for the Client.Delete method.
-func (client *Client) Delete(ctx context.Context, id string, options *ClientDeleteOptions) (ClientDeleteResponse, error) {
-	req, err := client.deleteCreateRequest(ctx, id, options)
+// options - ClientDeleteUserOptions contains the optional parameters for the Client.DeleteUser method.
+func (client *Client) DeleteUser(ctx context.Context, id string, options *ClientDeleteUserOptions) (ClientDeleteUserResponse, error) {
+	req, err := client.deleteUserCreateRequest(ctx, id, options)
 	if err != nil {
-		return ClientDeleteResponse{}, err
+		return ClientDeleteUserResponse{}, err
 	}
 	resp, err := client.pl.Do(req)
 	if err != nil {
-		return ClientDeleteResponse{}, err
+		return ClientDeleteUserResponse{}, err
 	}
 	if !runtime.HasStatusCode(resp, http.StatusNoContent) {
-		return ClientDeleteResponse{}, runtime.NewResponseError(resp)
+		return ClientDeleteUserResponse{}, runtime.NewResponseError(resp)
 	}
-	return ClientDeleteResponse{}, nil
+	return ClientDeleteUserResponse{}, nil
 }
 
-// deleteCreateRequest creates the Delete request.
-func (client *Client) deleteCreateRequest(ctx context.Context, id string, options *ClientDeleteOptions) (*policy.Request, error) {
+// deleteUserCreateRequest creates the DeleteUser request.
+func (client *Client) deleteUserCreateRequest(ctx context.Context, id string, options *ClientDeleteUserOptions) (*policy.Request, error) {
 	urlPath := "/identities/{id}"
 	if id == "" {
 		return nil, errors.New("parameter id cannot be empty")
@@ -109,74 +110,29 @@ func (client *Client) deleteCreateRequest(ctx context.Context, id string, option
 	return req, nil
 }
 
-// ExchangeTeamsUserAccessToken - Exchange an Azure Active Directory (Azure AD) access token of a Teams user for a new Communication
-// Identity access token with a matching expiration time.
-// If the operation fails it returns an *azcore.ResponseError type.
-// Generated from API version 2022-10-01
-// body - Request payload for the token exchange.
-// options - ClientExchangeTeamsUserAccessTokenOptions contains the optional parameters for the Client.ExchangeTeamsUserAccessToken
-// method.
-func (client *Client) ExchangeTeamsUserAccessToken(ctx context.Context, body TeamsUserExchangeTokenRequest, options *ClientExchangeTeamsUserAccessTokenOptions) (ClientExchangeTeamsUserAccessTokenResponse, error) {
-	req, err := client.exchangeTeamsUserAccessTokenCreateRequest(ctx, body, options)
-	if err != nil {
-		return ClientExchangeTeamsUserAccessTokenResponse{}, err
-	}
-	resp, err := client.pl.Do(req)
-	if err != nil {
-		return ClientExchangeTeamsUserAccessTokenResponse{}, err
-	}
-	if !runtime.HasStatusCode(resp, http.StatusOK) {
-		return ClientExchangeTeamsUserAccessTokenResponse{}, runtime.NewResponseError(resp)
-	}
-	return client.exchangeTeamsUserAccessTokenHandleResponse(resp)
-}
-
-// exchangeTeamsUserAccessTokenCreateRequest creates the ExchangeTeamsUserAccessToken request.
-func (client *Client) exchangeTeamsUserAccessTokenCreateRequest(ctx context.Context, body TeamsUserExchangeTokenRequest, options *ClientExchangeTeamsUserAccessTokenOptions) (*policy.Request, error) {
-	urlPath := "/teamsUser/:exchangeAccessToken"
-	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
-	if err != nil {
-		return nil, err
-	}
-	reqQP := req.Raw().URL.Query()
-	reqQP.Set("api-version", "2022-10-01")
-	req.Raw().URL.RawQuery = reqQP.Encode()
-	req.Raw().Header["Accept"] = []string{"application/json"}
-	return req, runtime.MarshalAsJSON(req, body)
-}
-
-// exchangeTeamsUserAccessTokenHandleResponse handles the ExchangeTeamsUserAccessToken response.
-func (client *Client) exchangeTeamsUserAccessTokenHandleResponse(resp *http.Response) (ClientExchangeTeamsUserAccessTokenResponse, error) {
-	result := ClientExchangeTeamsUserAccessTokenResponse{}
-	if err := runtime.UnmarshalAsJSON(resp, &result.AccessToken); err != nil {
-		return ClientExchangeTeamsUserAccessTokenResponse{}, err
-	}
-	return result, nil
-}
-
-// IssueAccessToken - Issue a new token for an identity.
+// GetToken - Issue a new token for an identity.
 // If the operation fails it returns an *azcore.ResponseError type.
 // Generated from API version 2022-10-01
 // id - Identifier of the identity to issue token for.
 // body - Requested scopes for the new token.
-// options - ClientIssueAccessTokenOptions contains the optional parameters for the Client.IssueAccessToken method.
-func (client *Client) IssueAccessToken(ctx context.Context, id string, body AccessTokenRequest, options *ClientIssueAccessTokenOptions) (ClientIssueAccessTokenResponse, error) {
-	req, err := client.issueAccessTokenCreateRequest(ctx, id, body, options)
+// options - ClientGetTokenOptions contains the optional parameters for the Client.GetToken method.
+func (client *Client) GetToken(ctx context.Context, id string, body AccessTokenRequest, options *ClientGetTokenOptions) (ClientGetTokenResponse, error) {
+	req, err := client.getTokenCreateRequest(ctx, id, body, options)
 	if err != nil {
-		return ClientIssueAccessTokenResponse{}, err
+		return ClientGetTokenResponse{}, err
 	}
 	resp, err := client.pl.Do(req)
 	if err != nil {
-		return ClientIssueAccessTokenResponse{}, err
+		return ClientGetTokenResponse{}, err
 	}
 	if !runtime.HasStatusCode(resp, http.StatusOK) {
-		return ClientIssueAccessTokenResponse{}, runtime.NewResponseError(resp)
+		return ClientGetTokenResponse{}, runtime.NewResponseError(resp)
 	}
-	return client.issueAccessTokenHandleResponse(resp)
+	return client.getTokenHandleResponse(resp)
 }
 
-// issueAccessTokenCreateRequest creates the IssueAccessToken request.
-func (client *Client) issueAccessTokenCreateRequest(ctx context.Context, id string, body AccessTokenRequest, options *ClientIssueAccessTokenOptions) (*policy.Request, error) {
+// getTokenCreateRequest creates the GetToken request.
+func (client *Client) getTokenCreateRequest(ctx context.Context, id string, body AccessTokenRequest, options *ClientGetTokenOptions) (*policy.Request, error) {
 	urlPath := "/identities/{id}/:issueAccessToken"
 	if id == "" {
 		return nil, errors.New("parameter id cannot be empty")
@@ -193,37 +149,81 @@ func (client *Client) issueAccessTokenCreateRequest(ctx context.Context, id stri
 	return req, runtime.MarshalAsJSON(req, body)
 }
 
-// issueAccessTokenHandleResponse handles the IssueAccessToken response.
-func (client *Client) issueAccessTokenHandleResponse(resp *http.Response) (ClientIssueAccessTokenResponse, error) {
-	result := ClientIssueAccessTokenResponse{}
+// getTokenHandleResponse handles the GetToken response.
+func (client *Client) getTokenHandleResponse(resp *http.Response) (ClientGetTokenResponse, error) {
+	result := ClientGetTokenResponse{}
 	if err := runtime.UnmarshalAsJSON(resp, &result.AccessToken); err != nil {
-		return ClientIssueAccessTokenResponse{}, err
+		return ClientGetTokenResponse{}, err
 	}
 	return result, nil
 }
 
-// RevokeAccessTokens - Revoke all access tokens for the specific identity.
+// GetTokenForTeamsUser - Exchange an Azure Active Directory (Azure AD) access token of a Teams user for a new Communication
+// Identity access token with a matching expiration time.
 // If the operation fails it returns an *azcore.ResponseError type.
 // Generated from API version 2022-10-01
-// id - Identifier of the identity.
-// options - ClientRevokeAccessTokensOptions contains the optional parameters for the Client.RevokeAccessTokens method.
-func (client *Client) RevokeAccessTokens(ctx context.Context, id string, options *ClientRevokeAccessTokensOptions) (ClientRevokeAccessTokensResponse, error) {
-	req, err := client.revokeAccessTokensCreateRequest(ctx, id, options)
+// body - Request payload for the token exchange.
+// options - ClientGetTokenForTeamsUserOptions contains the optional parameters for the Client.GetTokenForTeamsUser method.
+func (client *Client) GetTokenForTeamsUser(ctx context.Context, body GetTokenForTeamsUserRequest, options *ClientGetTokenForTeamsUserOptions) (ClientGetTokenForTeamsUserResponse, error) {
+	req, err := client.getTokenForTeamsUserCreateRequest(ctx, body, options)
 	if err != nil {
-		return ClientRevokeAccessTokensResponse{}, err
+		return ClientGetTokenForTeamsUserResponse{}, err
 	}
 	resp, err := client.pl.Do(req)
 	if err != nil {
-		return ClientRevokeAccessTokensResponse{}, err
+		return ClientGetTokenForTeamsUserResponse{}, err
 	}
-	if !runtime.HasStatusCode(resp, http.StatusNoContent) {
-		return ClientRevokeAccessTokensResponse{}, runtime.NewResponseError(resp)
+	if !runtime.HasStatusCode(resp, http.StatusOK) {
+		return ClientGetTokenForTeamsUserResponse{}, runtime.NewResponseError(resp)
 	}
-	return ClientRevokeAccessTokensResponse{}, nil
+	return client.getTokenForTeamsUserHandleResponse(resp)
 }
 
-// revokeAccessTokensCreateRequest creates the RevokeAccessTokens request.
-func (client *Client) revokeAccessTokensCreateRequest(ctx context.Context, id string, options *ClientRevokeAccessTokensOptions) (*policy.Request, error) {
+// getTokenForTeamsUserCreateRequest creates the GetTokenForTeamsUser request.
+func (client *Client) getTokenForTeamsUserCreateRequest(ctx context.Context, body GetTokenForTeamsUserRequest, options *ClientGetTokenForTeamsUserOptions) (*policy.Request, error) {
+	urlPath := "/teamsUser/:exchangeAccessToken"
+	req, err := runtime.NewRequest(ctx, http.MethodPost, runtime.JoinPaths(client.endpoint, urlPath))
+	if err != nil {
+		return nil, err
+	}
+	reqQP := req.Raw().URL.Query()
+	reqQP.Set("api-version", "2022-10-01")
+	req.Raw().URL.RawQuery = reqQP.Encode()
+	req.Raw().Header["Accept"] = []string{"application/json"}
+	return req, runtime.MarshalAsJSON(req, body)
+}
+
+// getTokenForTeamsUserHandleResponse handles the GetTokenForTeamsUser response.
+func (client *Client) getTokenForTeamsUserHandleResponse(resp *http.Response) (ClientGetTokenForTeamsUserResponse, error) {
+	result := ClientGetTokenForTeamsUserResponse{}
+	if err := runtime.UnmarshalAsJSON(resp, &result.AccessToken); err != nil {
+		return ClientGetTokenForTeamsUserResponse{}, err
+	}
+	return result, nil
+}
+
+// RevokeTokens - Revoke all access tokens for the specific identity.
+// If the operation fails it returns an *azcore.ResponseError type.
+// Generated from API version 2022-10-01
+// id - Identifier of the identity.
+// options - ClientRevokeTokensOptions contains the optional parameters for the Client.RevokeTokens method.
+func (client *Client) RevokeTokens(ctx context.Context, id string, options *ClientRevokeTokensOptions) (ClientRevokeTokensResponse, error) {
+	req, err := client.revokeTokensCreateRequest(ctx, id, options)
+	if err != nil {
+		return ClientRevokeTokensResponse{}, err
+	}
+	resp, err := client.pl.Do(req)
+	if err != nil {
+		return ClientRevokeTokensResponse{}, err
+	}
+	if !runtime.HasStatusCode(resp, http.StatusNoContent) {
+		return ClientRevokeTokensResponse{}, runtime.NewResponseError(resp)
+	}
+	return ClientRevokeTokensResponse{}, nil
+}
+
+// revokeTokensCreateRequest creates the RevokeTokens request.
+func (client *Client) revokeTokensCreateRequest(ctx context.Context, id string, options *ClientRevokeTokensOptions) (*policy.Request, error) {
 	urlPath := "/identities/{id}/:revokeAccessTokens"
 	if id == "" {
 		return nil, errors.New("parameter id cannot be empty")
@@ -239,3 +239,4 @@ func (client *Client) revokeAccessTokensCreateRequest(ctx context.Context, id st
 	req.Raw().Header["Accept"] = []string{"application/json"}
 	return req, nil
 }
+

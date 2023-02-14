@@ -34,11 +34,11 @@ func (a *AccessToken) UnmarshalJSON(data []byte) error {
 		var err error
 		switch key {
 		case "expiresOn":
-			err = unpopulateTimeRFC3339(val, "ExpiresOn", &a.ExpiresOn)
-			delete(rawMsg, key)
+				err = unpopulateTimeRFC3339(val, "ExpiresOn", &a.ExpiresOn)
+				delete(rawMsg, key)
 		case "token":
-			err = unpopulate(val, "Token", &a.Token)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Token", &a.Token)
+				delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", a, err)
@@ -65,11 +65,11 @@ func (a *AccessTokenRequest) UnmarshalJSON(data []byte) error {
 		var err error
 		switch key {
 		case "expiresInMinutes":
-			err = unpopulate(val, "ExpiresInMinutes", &a.ExpiresInMinutes)
-			delete(rawMsg, key)
+				err = unpopulate(val, "ExpiresInMinutes", &a.ExpiresInMinutes)
+				delete(rawMsg, key)
 		case "scopes":
-			err = unpopulate(val, "Scopes", &a.Scopes)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Scopes", &a.Scopes)
+				delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", a, err)
@@ -96,11 +96,11 @@ func (a *AccessTokenResult) UnmarshalJSON(data []byte) error {
 		var err error
 		switch key {
 		case "accessToken":
-			err = unpopulate(val, "AccessToken", &a.AccessToken)
-			delete(rawMsg, key)
+				err = unpopulate(val, "AccessToken", &a.AccessToken)
+				delete(rawMsg, key)
 		case "identity":
-			err = unpopulate(val, "Identity", &a.Identity)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Identity", &a.Identity)
+				delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", a, err)
@@ -130,20 +130,20 @@ func (c *CommunicationError) UnmarshalJSON(data []byte) error {
 		var err error
 		switch key {
 		case "code":
-			err = unpopulate(val, "Code", &c.Code)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Code", &c.Code)
+				delete(rawMsg, key)
 		case "details":
-			err = unpopulate(val, "Details", &c.Details)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Details", &c.Details)
+				delete(rawMsg, key)
 		case "innererror":
-			err = unpopulate(val, "InnerError", &c.InnerError)
-			delete(rawMsg, key)
+				err = unpopulate(val, "InnerError", &c.InnerError)
+				delete(rawMsg, key)
 		case "message":
-			err = unpopulate(val, "Message", &c.Message)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Message", &c.Message)
+				delete(rawMsg, key)
 		case "target":
-			err = unpopulate(val, "Target", &c.Target)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Target", &c.Target)
+				delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", c, err)
@@ -169,8 +169,8 @@ func (c *CommunicationErrorResponse) UnmarshalJSON(data []byte) error {
 		var err error
 		switch key {
 		case "error":
-			err = unpopulate(val, "Error", &c.Error)
-			delete(rawMsg, key)
+				err = unpopulate(val, "Error", &c.Error)
+				delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", c, err)
@@ -196,8 +196,8 @@ func (c *CommunicationIdentity) UnmarshalJSON(data []byte) error {
 		var err error
 		switch key {
 		case "id":
-			err = unpopulate(val, "ID", &c.ID)
-			delete(rawMsg, key)
+				err = unpopulate(val, "ID", &c.ID)
+				delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", c, err)
@@ -209,8 +209,8 @@ func (c *CommunicationIdentity) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type CreateRequest.
 func (c CreateRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]interface{})
-	populate(objectMap, "createTokenWithScopes", c.CreateTokenWithScopes)
 	populate(objectMap, "expiresInMinutes", c.ExpiresInMinutes)
+	populate(objectMap, "Scopes", c.Scopes)
 	return json.Marshal(objectMap)
 }
 
@@ -223,12 +223,12 @@ func (c *CreateRequest) UnmarshalJSON(data []byte) error {
 	for key, val := range rawMsg {
 		var err error
 		switch key {
-		case "createTokenWithScopes":
-			err = unpopulate(val, "CreateTokenWithScopes", &c.CreateTokenWithScopes)
-			delete(rawMsg, key)
 		case "expiresInMinutes":
-			err = unpopulate(val, "ExpiresInMinutes", &c.ExpiresInMinutes)
-			delete(rawMsg, key)
+				err = unpopulate(val, "ExpiresInMinutes", &c.ExpiresInMinutes)
+				delete(rawMsg, key)
+		case "Scopes":
+				err = unpopulate(val, "Scopes", &c.Scopes)
+				delete(rawMsg, key)
 		}
 		if err != nil {
 			return fmt.Errorf("unmarshalling type %T: %v", c, err)
@@ -237,36 +237,36 @@ func (c *CreateRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// MarshalJSON implements the json.Marshaller interface for type TeamsUserExchangeTokenRequest.
-func (t TeamsUserExchangeTokenRequest) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements the json.Marshaller interface for type GetTokenForTeamsUserRequest.
+func (g GetTokenForTeamsUserRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]interface{})
-	populate(objectMap, "appId", t.AppID)
-	populate(objectMap, "token", t.Token)
-	populate(objectMap, "userId", t.UserID)
+	populate(objectMap, "ClientId", g.ClientID)
+	populate(objectMap, "TeamsUserAadToken", g.TeamsUserAADToken)
+	populate(objectMap, "UserObjectId", g.UserObjectID)
 	return json.Marshal(objectMap)
 }
 
-// UnmarshalJSON implements the json.Unmarshaller interface for type TeamsUserExchangeTokenRequest.
-func (t *TeamsUserExchangeTokenRequest) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements the json.Unmarshaller interface for type GetTokenForTeamsUserRequest.
+func (g *GetTokenForTeamsUserRequest) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
-		return fmt.Errorf("unmarshalling type %T: %v", t, err)
+		return fmt.Errorf("unmarshalling type %T: %v", g, err)
 	}
 	for key, val := range rawMsg {
 		var err error
 		switch key {
-		case "appId":
-			err = unpopulate(val, "AppID", &t.AppID)
-			delete(rawMsg, key)
-		case "token":
-			err = unpopulate(val, "Token", &t.Token)
-			delete(rawMsg, key)
-		case "userId":
-			err = unpopulate(val, "UserID", &t.UserID)
-			delete(rawMsg, key)
+		case "ClientId":
+				err = unpopulate(val, "ClientID", &g.ClientID)
+				delete(rawMsg, key)
+		case "TeamsUserAadToken":
+				err = unpopulate(val, "TeamsUserAADToken", &g.TeamsUserAADToken)
+				delete(rawMsg, key)
+		case "UserObjectId":
+				err = unpopulate(val, "UserObjectID", &g.UserObjectID)
+				delete(rawMsg, key)
 		}
 		if err != nil {
-			return fmt.Errorf("unmarshalling type %T: %v", t, err)
+			return fmt.Errorf("unmarshalling type %T: %v", g, err)
 		}
 	}
 	return nil
@@ -291,3 +291,4 @@ func unpopulate(data json.RawMessage, fn string, v interface{}) error {
 	}
 	return nil
 }
+

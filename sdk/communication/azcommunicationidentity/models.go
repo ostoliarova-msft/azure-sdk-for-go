@@ -25,7 +25,7 @@ type AccessTokenRequest struct {
 	Scopes []*CommunicationIdentityTokenScope `json:"scopes,omitempty"`
 
 	// Optional custom validity period of the token within [60,1440] minutes range. If not provided, the default value of 1440
-	// minutes (24 hours) will be used.
+// minutes (24 hours) will be used.
 	ExpiresInMinutes *int32 `json:"expiresInMinutes,omitempty"`
 }
 
@@ -38,31 +38,30 @@ type AccessTokenResult struct {
 	AccessToken *AccessToken `json:"accessToken,omitempty"`
 }
 
-// ClientCreateOptions contains the optional parameters for the Client.Create method.
-type ClientCreateOptions struct {
+// ClientCreateUserOptions contains the optional parameters for the Client.CreateUser method.
+type ClientCreateUserOptions struct {
 	// If specified, creates also a Communication Identity access token associated with the identity and containing the requested
-	// scopes.
+// scopes.
 	Body *CreateRequest
 }
 
-// ClientDeleteOptions contains the optional parameters for the Client.Delete method.
-type ClientDeleteOptions struct {
+// ClientDeleteUserOptions contains the optional parameters for the Client.DeleteUser method.
+type ClientDeleteUserOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ClientExchangeTeamsUserAccessTokenOptions contains the optional parameters for the Client.ExchangeTeamsUserAccessToken
-// method.
-type ClientExchangeTeamsUserAccessTokenOptions struct {
+// ClientGetTokenForTeamsUserOptions contains the optional parameters for the Client.GetTokenForTeamsUser method.
+type ClientGetTokenForTeamsUserOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ClientIssueAccessTokenOptions contains the optional parameters for the Client.IssueAccessToken method.
-type ClientIssueAccessTokenOptions struct {
+// ClientGetTokenOptions contains the optional parameters for the Client.GetToken method.
+type ClientGetTokenOptions struct {
 	// placeholder for future optional parameters
 }
 
-// ClientRevokeAccessTokensOptions contains the optional parameters for the Client.RevokeAccessTokens method.
-type ClientRevokeAccessTokensOptions struct {
+// ClientRevokeTokensOptions contains the optional parameters for the Client.RevokeTokens method.
+type ClientRevokeTokensOptions struct {
 	// placeholder for future optional parameters
 }
 
@@ -97,21 +96,22 @@ type CommunicationIdentity struct {
 }
 
 type CreateRequest struct {
-	// Also create access token for the created identity.
-	CreateTokenWithScopes []*CommunicationIdentityTokenScope `json:"createTokenWithScopes,omitempty"`
-
 	// Optional custom validity period of the token within [60,1440] minutes range. If not provided, the default value of 1440
-	// minutes (24 hours) will be used.
+// minutes (24 hours) will be used.
 	ExpiresInMinutes *int32 `json:"expiresInMinutes,omitempty"`
+
+	// Also create access token for the created identity.
+	Scopes []*CommunicationIdentityTokenScope `json:"Scopes,omitempty"`
 }
 
-type TeamsUserExchangeTokenRequest struct {
-	// REQUIRED; Client ID of an Azure AD application to be verified against the appid claim in the Azure AD access token.
-	AppID *string `json:"appId,omitempty"`
+type GetTokenForTeamsUserRequest struct {
+	// Client ID of an Azure AD application to be verified against the appid claim in the Azure AD access token.
+	ClientID *string `json:"ClientId,omitempty"`
 
-	// REQUIRED; Azure AD access token of a Teams User to acquire a new Communication Identity access token.
-	Token *string `json:"token,omitempty"`
+	// Azure AD access token of a Teams User to acquire a new Communication Identity access token.
+	TeamsUserAADToken *string `json:"TeamsUserAadToken,omitempty"`
 
-	// REQUIRED; Object ID of an Azure AD user (Teams User) to be verified against the oid claim in the Azure AD access token.
-	UserID *string `json:"userId,omitempty"`
+	// Object ID of an Azure AD user (Teams User) to be verified against the oid claim in the Azure AD access token.
+	UserObjectID *string `json:"UserObjectId,omitempty"`
 }
+

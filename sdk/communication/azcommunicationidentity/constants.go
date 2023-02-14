@@ -19,8 +19,9 @@ const (
 
 // PossibleCommunicationIdentityTokenScopeValues returns the possible values for the CommunicationIdentityTokenScope const type.
 func PossibleCommunicationIdentityTokenScopeValues() []CommunicationIdentityTokenScope {
-	return []CommunicationIdentityTokenScope{
+	return []CommunicationIdentityTokenScope{	
 		CommunicationIdentityTokenScopeChat,
 		CommunicationIdentityTokenScopeVoip,
 	}
 }
+

@@ -18,7 +18,7 @@ func TestNewClientManagedIdentity(t *testing.T) {
 	client := createClientWithManagedIdentity()
 
 	// Create a new identity
-	clientCreateResponse, err := client.Create(context.TODO(), nil)
+	clientCreateResponse, err := client.CreateUser(context.TODO(), nil)
 	require.Nil(t, err)
 	require.NotNil(t, clientCreateResponse)
 
@@ -26,7 +26,7 @@ func TestNewClientManagedIdentity(t *testing.T) {
 	require.True(t, strings.HasPrefix(id, "8:acs:"))
 
 	// Clean up resources
-	clientDeleteResponse, err := client.Delete(context.TODO(), id, nil)
+	clientDeleteResponse, err := client.DeleteUser(context.TODO(), id, nil)
 	require.Nil(t, err)
 	require.NotNil(t, clientDeleteResponse)
 }
@@ -35,7 +35,7 @@ func TestGetTokenGeneratesTokenAndIdentityWithScopes(t *testing.T) {
 	client := createClientWithManagedIdentity()
 
 	// Create identity
-	clientCreateResponse, err := client.Create(context.TODO(), nil)
+	clientCreateResponse, err := client.CreateUser(context.TODO(), nil)
 	require.Nil(t, err)
 	require.NotNil(t, clientCreateResponse)
 
@@ -52,7 +52,7 @@ func TestGetTokenGeneratesTokenAndIdentityWithScopes(t *testing.T) {
 	}
 
 	// Issue token for the created identity
-	tokenResponse, err := client.IssueAccessToken(context.TODO(), id, accessTokenRequest, nil)
+	tokenResponse, err := client.GetToken(context.TODO(), id, accessTokenRequest, nil)
 	require.Nil(t, err)
 	require.NotNil(t, clientCreateResponse)
 	require.NotNil(t, tokenResponse.AccessToken.Token)
@@ -61,14 +61,14 @@ func TestGetTokenGeneratesTokenAndIdentityWithScopes(t *testing.T) {
 	require.True(t, len(token) > 0)
 
 	// Clean up resources
-	client.Delete(context.TODO(), id, nil)
+	client.DeleteUser(context.TODO(), id, nil)
 }
 
 func TestRevokeAccessToken(t *testing.T) {
 	client := createClientWithManagedIdentity()
 
 	// Create identity
-	clientCreateResponse, _ := client.Create(context.TODO(), nil)
+	clientCreateResponse, _ := client.CreateUser(context.TODO(), nil)
 	id := *clientCreateResponse.AccessTokenResult.Identity.ID
 	chatScope := azcommunicationidentity.CommunicationIdentityTokenScopeChat
 	voipScope := azcommunicationidentity.CommunicationIdentityTokenScopeVoip
@@ -80,16 +80,16 @@ func TestRevokeAccessToken(t *testing.T) {
 	}
 
 	// Issue token for the created identity
-	tokenResponse, _ := client.IssueAccessToken(context.TODO(), id, accessTokenRequest, nil)
+	tokenResponse, _ := client.GetToken(context.TODO(), id, accessTokenRequest, nil)
 	token := *tokenResponse.AccessToken.Token
 	require.True(t, len(token) > 0)
 
-	revokeResponse, err := client.RevokeAccessTokens(context.TODO(), id, nil)
+	revokeResponse, err := client.RevokeTokens(context.TODO(), id, nil)
 	require.Nil(t, err)
 	require.NotNil(t, revokeResponse)
 
 	// Clean up resources
-	client.Delete(context.TODO(), id, nil)
+	client.DeleteUser(context.TODO(), id, nil)
 }
 
 func TestExchangeAccessToken(t *testing.T) {
@@ -98,7 +98,7 @@ func TestExchangeAccessToken(t *testing.T) {
 	exchangeTokenRequest, err := getTokenExchangeRequest()
 	require.Nil(t, err)
 
-	exchangeResponse, err := client.ExchangeTeamsUserAccessToken(context.TODO(), exchangeTokenRequest, nil)
+	exchangeResponse, err := client.GetTokenForTeamsUser(context.TODO(), exchangeTokenRequest, nil)
 	require.Nil(t, err)
 	require.NotNil(t, exchangeResponse)
 
@@ -125,7 +125,7 @@ func createClientWithManagedIdentity() *azcommunicationidentity.Client {
 	return azcommunicationidentity.NewClient(endpoint, cred, nil)
 }
 
-func getTokenExchangeRequest() (azcommunicationidentity.TeamsUserExchangeTokenRequest, error) {
+func getTokenExchangeRequest() (azcommunicationidentity.GetTokenForTeamsUserRequest, error) {
 	appId := os.Getenv("COMMUNICATION_M365_APP_ID")
 	authority := fmt.Sprintf("%v/%v", os.Getenv("COMMUNICATION_M365_AAD_AUTHORITY"), os.Getenv("COMMUNICATION_M365_AAD_TENANT"))
 
@@ -135,14 +135,14 @@ func getTokenExchangeRequest() (azcommunicationidentity.TeamsUserExchangeTokenRe
 
 	result, err := publicClientApp.AcquireTokenByUsernamePassword(context.TODO(), scopes, os.Getenv("COMMUNICATION_MSAL_USERNAME"), os.Getenv("COMMUNICATION_MSAL_PASSWORD"))
 	if err != nil {
-		return azcommunicationidentity.TeamsUserExchangeTokenRequest{}, err
+		return azcommunicationidentity.GetTokenForTeamsUserRequest{}, err
 	}
 
 	accountIds := strings.Split(result.Account.HomeAccountID, ".")
 
-	return azcommunicationidentity.TeamsUserExchangeTokenRequest{
-		AppID:  &appId,
-		Token:  &result.AccessToken,
-		UserID: &accountIds[0],
+	return azcommunicationidentity.GetTokenForTeamsUserRequest{
+		ClientID:  &appId,
+		TeamsUserAADToken:  &result.AccessToken,
+		UserObjectID: &accountIds[0],
 	}, nil
 }
