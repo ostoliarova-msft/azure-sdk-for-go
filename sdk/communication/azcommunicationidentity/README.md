@@ -22,7 +22,7 @@ The identity client can be authenticated using endpoint acquired from an Azure C
 
 ```Go Snippet:Managed_identities_client
 // Get the endpoint name value to our Azure Communication resource.
-var endpoint = "<endpoint>";
+var endpoint = "<endpoint>"
 
 // Get credential
 credential, err := azidentity.NewDefaultAzureCredential(nil)
@@ -35,7 +35,7 @@ Or alternatively using the connection string acquired from an Azure Communicatio
 
 ```Go Snippet:Hmac_client
 // Get a connection string to our Azure Communication resource.
-connectionString := os.Getenv("AZURE_COMMUNICATION_CONNECTION_STRING")
+connectionString := "<connection_string>"
 
 // Create the client that uses managed identities authentication
 client := azcommunicationidentity.NewClientWithHmacAuth(connectionString, nil)
@@ -113,7 +113,7 @@ fmt.Print("Revoked a token.\n")
 ### Deleting a user
 
 ```Go Snippet:DeleteCommunicationUser
-// Delete user
+// Delete user.
 _, err = client.DeleteUser(context.TODO(), id, nil)
 fmt.Print("Deleted a user.\n")
 ```
