@@ -67,3 +67,21 @@ directive:
       from: TeamsUserExchangeTokenRequest
       to: GetTokenForTeamsUserRequest
 ```
+
+### Apply changes to the generated go file
+```yaml
+directive:
+  - from:
+      - models.go
+    where: $
+    transform: return $.replace(/ClientId,omitempty/, "appId,omitempty")
+                       .replace(/TeamsUserAadToken,omitempty/, "token,omitempty")
+                       .replace(/UserObjectId,omitempty/, "userId,omitempty")
+  - from:
+      - models_serde.go
+    where: $
+    transform: return $.replace(/ClientId/, "appId")
+                       .replace(/TeamsUserAadToken/, "token")
+                       .replace(/UserObjectId/, "userId")
+
+```

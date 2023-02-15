@@ -106,12 +106,12 @@ type CreateRequest struct {
 
 type GetTokenForTeamsUserRequest struct {
 	// Client ID of an Azure AD application to be verified against the appid claim in the Azure AD access token.
-	ClientID *string `json:"ClientId,omitempty"`
+	ClientID *string `json:"appId,omitempty"`
 
 	// Azure AD access token of a Teams User to acquire a new Communication Identity access token.
-	TeamsUserAADToken *string `json:"TeamsUserAadToken,omitempty"`
+	TeamsUserAADToken *string `json:"token,omitempty"`
 
 	// Object ID of an Azure AD user (Teams User) to be verified against the oid claim in the Azure AD access token.
-	UserObjectID *string `json:"UserObjectId,omitempty"`
+	UserObjectID *string `json:"userId,omitempty"`
 }
 
