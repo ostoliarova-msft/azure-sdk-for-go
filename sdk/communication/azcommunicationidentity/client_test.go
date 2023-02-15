@@ -31,6 +31,35 @@ func TestNewClientManagedIdentity(t *testing.T) {
 	require.NotNil(t, clientDeleteResponse)
 }
 
+func TestCreateUserAndToken(t *testing.T) {
+	client := createClientWithManagedIdentity()
+
+	chatScope := azcommunicationidentity.CommunicationIdentityTokenScopeChat
+	voipScope := azcommunicationidentity.CommunicationIdentityTokenScopeVoip
+	expirationTime := int32(60)
+	options := azcommunicationidentity.ClientCreateUserOptions{
+		Body: &azcommunicationidentity.CreateRequest{
+			Scopes:           []*azcommunicationidentity.CommunicationIdentityTokenScope{&chatScope, &voipScope},
+			ExpiresInMinutes: &expirationTime,
+		},
+	}
+
+	// Create identity
+	clientCreateResponse, err := client.CreateUser(context.TODO(), &options)
+	require.Nil(t, err)
+	require.NotNil(t, clientCreateResponse)
+
+	id := *clientCreateResponse.AccessTokenResult.Identity.ID
+	require.True(t, strings.HasPrefix(id, "8:acs:"))
+
+	require.NotNil(t, clientCreateResponse.AccessToken.Token)
+	token := *clientCreateResponse.AccessToken.Token
+	require.True(t, len(token) > 0)
+
+	// Clean up resources
+	client.DeleteUser(context.TODO(), id, nil)
+}
+
 func TestGetTokenGeneratesTokenAndIdentityWithScopes(t *testing.T) {
 	client := createClientWithManagedIdentity()
 
@@ -141,8 +170,8 @@ func getTokenExchangeRequest() (azcommunicationidentity.GetTokenForTeamsUserRequ
 	accountIds := strings.Split(result.Account.HomeAccountID, ".")
 
 	return azcommunicationidentity.GetTokenForTeamsUserRequest{
-		ClientID:  &appId,
-		TeamsUserAADToken:  &result.AccessToken,
-		UserObjectID: &accountIds[0],
+		ClientID:          &appId,
+		TeamsUserAADToken: &result.AccessToken,
+		UserObjectID:      &accountIds[0],
 	}, nil
 }
