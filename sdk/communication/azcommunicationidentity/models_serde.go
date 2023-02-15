@@ -210,7 +210,7 @@ func (c *CommunicationIdentity) UnmarshalJSON(data []byte) error {
 func (c CreateRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]interface{})
 	populate(objectMap, "expiresInMinutes", c.ExpiresInMinutes)
-	populate(objectMap, "Scopes", c.Scopes)
+	populate(objectMap, "createTokenWithScopes", c.Scopes)
 	return json.Marshal(objectMap)
 }
 

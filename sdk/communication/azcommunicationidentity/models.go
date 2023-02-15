@@ -101,7 +101,7 @@ type CreateRequest struct {
 	ExpiresInMinutes *int32 `json:"expiresInMinutes,omitempty"`
 
 	// Also create access token for the created identity.
-	Scopes []*CommunicationIdentityTokenScope `json:"Scopes,omitempty"`
+	Scopes []*CommunicationIdentityTokenScope `json:"createTokenWithScopes,omitempty"`
 }
 
 type GetTokenForTeamsUserRequest struct {
