@@ -24,7 +24,7 @@ func NewClient(endpoint string, credential azcore.TokenCredential, options *Clie
 	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{"https://communication.azure.com//.default"}, nil)
 	var conOptions = getClientOptions(options)
 	conOptions.PerRetryPolicies = append(conOptions.PerRetryPolicies, authPolicy)
-	pl := runtime.NewPipeline("azcommunicationidentity", "v1.0.0", runtime.PipelineOptions{}, &conOptions.ClientOptions)
+	pl := runtime.NewPipeline(moduleName, version, runtime.PipelineOptions{}, &conOptions.ClientOptions)
 	return &Client{
 		endpoint: endpoint,
 		pl:       pl,
