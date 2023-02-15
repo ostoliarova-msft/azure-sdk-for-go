@@ -21,7 +21,7 @@ type ClientOptions struct {
 //   - cred - an Azure AD credential, typically obtained via the azidentity module
 //   - options - client options; pass nil to accept the default values
 func NewClient(endpoint string, credential azcore.TokenCredential, options *ClientOptions) *Client {
-	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{"https://communication.azure.com//.default"}, nil)
+	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{TokenScope}, nil)
 	var conOptions = getClientOptions(options)
 	conOptions.PerRetryPolicies = append(conOptions.PerRetryPolicies, authPolicy)
 	pl := runtime.NewPipeline(moduleName, version, runtime.PipelineOptions{}, &conOptions.ClientOptions)
