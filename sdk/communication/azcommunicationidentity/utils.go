@@ -6,6 +6,8 @@
 
 package azcommunicationidentity
 
+import "regexp"
+
 const (
 	moduleName = "azcommunicationidentity"
 	version    = "0.1.0"
@@ -14,3 +16,16 @@ const (
 const (
 	TokenScope = "https://communication.azure.com/.default"
 )
+
+func ParseConnectionString(connectionString string) map[string]string {
+	var rex = regexp.MustCompile("(\\w+)=([^;]*)")
+	data := rex.FindAllStringSubmatch(connectionString, -1)
+
+	connectionMap := make(map[string]string)
+	for _, kv := range data {
+		k := kv[1]
+		v := kv[2]
+		connectionMap[k] = v
+	}
+	return connectionMap
+}
