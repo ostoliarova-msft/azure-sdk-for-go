@@ -210,7 +210,7 @@ func (c *CommunicationIdentity) UnmarshalJSON(data []byte) error {
 func (c CreateRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]interface{})
 	populate(objectMap, "expiresInMinutes", c.ExpiresInMinutes)
-	populate(objectMap, "Scopes", c.Scopes)
+	populate(objectMap, "createTokenWithScopes", c.Scopes)
 	return json.Marshal(objectMap)
 }
 
@@ -240,9 +240,9 @@ func (c *CreateRequest) UnmarshalJSON(data []byte) error {
 // MarshalJSON implements the json.Marshaller interface for type GetTokenForTeamsUserRequest.
 func (g GetTokenForTeamsUserRequest) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]interface{})
-	populate(objectMap, "ClientId", g.ClientID)
-	populate(objectMap, "TeamsUserAadToken", g.TeamsUserAADToken)
-	populate(objectMap, "UserObjectId", g.UserObjectID)
+	populate(objectMap, "appId", g.ClientID)
+	populate(objectMap, "token", g.TeamsUserAADToken)
+	populate(objectMap, "userId", g.UserObjectID)
 	return json.Marshal(objectMap)
 }
 
