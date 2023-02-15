@@ -23,7 +23,7 @@ NewClient creates a new instance of Azure Communication Identity Client with the
 - options - client options; pass nil to accept the default values
 */
 func NewClient(endpoint string, credential azcore.TokenCredential, options *ClientOptions) *Client {
-	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{TokenScope}, nil)
+	authPolicy := runtime.NewBearerTokenPolicy(credential, []string{tokenScope}, nil)
 	var conOptions = getClientOptions(options)
 	conOptions.PerRetryPolicies = append(conOptions.PerRetryPolicies, authPolicy)
 	pl := runtime.NewPipeline(moduleName, version, runtime.PipelineOptions{}, &conOptions.ClientOptions)
@@ -39,11 +39,11 @@ NewClientWithHmacAuth creates a new instance of Azure Communication Identity Cli
   - options - client options; pass nil to accept the default values
 */
 func NewClientWithHmacAuth(connectionString string, options *ClientOptions) *Client {
-	connectionMap := ParseConnectionString(connectionString)
-	authPolicy := CreateCommunicationAccessKeyCredentialPolicy(connectionMap["accesskey"])
+	connectionMap := parseConnectionString(connectionString)
+	authPolicy := createCommunicationAccessKeyCredentialPolicy(connectionMap["accesskey"])
 	var conOptions = getClientOptions(options)
 	conOptions.PerRetryPolicies = append(conOptions.PerRetryPolicies, authPolicy)
-	pl := runtime.NewPipeline("azcommunicationidentity", "v1.0.0", runtime.PipelineOptions{}, &conOptions.ClientOptions)
+	pl := runtime.NewPipeline(moduleName, version, runtime.PipelineOptions{}, &conOptions.ClientOptions)
 	return &Client{
 		endpoint: connectionMap["endpoint"],
 		pl:       pl,

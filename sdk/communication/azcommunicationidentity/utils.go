@@ -14,10 +14,10 @@ const (
 )
 
 const (
-	TokenScope = "https://communication.azure.com/.default"
+	tokenScope = "https://communication.azure.com/.default"
 )
 
-func ParseConnectionString(connectionString string) map[string]string {
+func parseConnectionString(connectionString string) map[string]string {
 	var rex = regexp.MustCompile("(\\w+)=([^;]*)")
 	data := rex.FindAllStringSubmatch(connectionString, -1)
 
