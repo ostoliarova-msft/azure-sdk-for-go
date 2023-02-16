@@ -118,6 +118,31 @@ _, err = client.DeleteUser(context.TODO(), id, nil)
 fmt.Print("Deleted a user.\n")
 ```
 
+## Exchange an Azure AD access token of a Teams User for a Communication Identity access token
+
+The `azcommunicationidentity.Client` can be used to exchange an Azure AD access token of a Teams user for a new Communication Identity access token with a matching expiration time.
+
+The `GetTokenForTeamsUser` function accepts the following parameters that are sent in the request body:
+- `ClientID` Client ID of an Azure AD application to be verified against the appId claim in the Azure AD access token
+- `TeamsUserAADToken` Azure Active Directory access token of a Teams user
+- `UserObjectID` Object ID of an Azure AD user (Teams User) to be verified against the OID claim in the Azure AD access token
+
+```Go Snippet:GetTokenForTeamsUser
+clientId := "<client_id>"
+teamsUserAADToken := "<teams_user_aad_token>"
+userObjectId := "<user_object_id>"
+
+exchangeTokenRequest := azcommunicationidentity.GetTokenForTeamsUserRequest{
+    ClientID:          &clientId,
+    TeamsUserAADToken: &teamsUserAADToken,
+    UserObjectID:      &userObjectId,
+}
+
+exchangeResponse, err := client.GetTokenForTeamsUser(context.TODO(), exchangeTokenRequest, nil)
+token := *exchangeResponse.AccessToken.Token
+fmt.Printf("Token: %s.\n", token)
+```
+
 ## Troubleshooting
 
 All User token service operations will throw an error on failure.
