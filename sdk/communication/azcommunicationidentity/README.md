@@ -137,7 +137,7 @@ exchangeTokenRequest := azcommunicationidentity.GetTokenForTeamsUserRequest{
     TeamsUserAADToken: &teamsUserAADToken,
     UserObjectID:      &userObjectId,
 }
-
+// Exchange an AAD access token of a Teams User for a new Communication Identity access token.
 exchangeResponse, err := client.GetTokenForTeamsUser(context.TODO(), exchangeTokenRequest, nil)
 token := *exchangeResponse.AccessToken.Token
 fmt.Printf("Token: %s.\n", token)
